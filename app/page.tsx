@@ -52,10 +52,7 @@ export default function Home() {
         const data = await response.json();
         setChats(data);
         
-        // If no chats exist, show model selection modal
-        if (data.length === 0) {
-          setShowModelSelection(true);
-        }
+        // Don't auto-show modal anymore - let user trigger it
       }
     } catch (error) {
       console.error('Error loading chats:', error);
@@ -64,12 +61,12 @@ export default function Home() {
     }
   };
 
-  const createNewChat = async (model?: 'openai/gpt-4o' | 'deepseek-chat') => {
+  const createNewChat = async (model: 'openai/gpt-4o' | 'deepseek-chat') => {
     try {
       const response = await fetch('/api/chats', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: model || 'openai/gpt-4o' }),
+        body: JSON.stringify({ model }),
       });
 
       if (response.ok) {
@@ -82,11 +79,18 @@ export default function Home() {
     }
   };
 
+  const handleNewChatClick = () => {
+    setShowModelSelection(true);
+  };
+
   const handleModelSelection = async (model: 'openai/gpt-4o' | 'deepseek-chat') => {
-    setShowModelSelection(false);
     await createNewChat(model);
   };
   const renameChat = async (id: string, title: string) => {
+  const handleCloseModal = () => {
+    setShowModelSelection(false);
+  };
+
     try {
       const response = await fetch(`/api/chats/${id}`, {
         method: 'PATCH',
@@ -144,12 +148,13 @@ export default function Home() {
     <div className="h-screen flex bg-gray-50">
       <ModelSelectionModal
         open={showModelSelection}
+        onClose={handleCloseModal}
         onSelectModel={handleModelSelection}
       />
       <ChatSidebar
         chats={chats}
         activeChat={activeChat}
-        onNewChat={createNewChat}
+        onNewChat={handleNewChatClick}
         onSelectChat={setActiveChat}
         onRenameChat={renameChat}
         onDeleteChat={deleteChat}
@@ -157,6 +162,7 @@ export default function Home() {
       <ChatInterface
         activeChat={activeChat}
         onUpdateChat={handleUpdateChat}
+        onNewChat={handleNewChatClick}
       />
     </div>
   );

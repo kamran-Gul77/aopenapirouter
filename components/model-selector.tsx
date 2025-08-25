@@ -15,25 +15,33 @@ interface ModelSelectorProps {
 }
 
 const modelLabels = {
-  'openai/gpt-4o': 'ChatGPT (GPT-4o)',
-  'deepseek-chat': 'DeepSeek Chat',
+  'openai/gpt-4o': 'Switch to ChatGPT',
+  'deepseek-chat': 'Switch to DeepSeek',
 };
 
 export function ModelSelector({ value, onChange }: ModelSelectorProps) {
+  const currentLabel = value === 'openai/gpt-4o' ? 'ChatGPT' : 'DeepSeek';
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="gap-2">
-          {modelLabels[value]}
+        <Button variant="outline" className="gap-2 text-sm">
+          Switch Model
           <ChevronDownIcon size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => onChange('openai/gpt-4o')}>
-          ChatGPT (GPT-4o)
+        <DropdownMenuItem 
+          onClick={() => onChange('openai/gpt-4o')}
+          disabled={value === 'openai/gpt-4o'}
+        >
+          🤖 ChatGPT
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onChange('deepseek-chat')}>
-          DeepSeek Chat
+        <DropdownMenuItem 
+          onClick={() => onChange('deepseek-chat')}
+          disabled={value === 'deepseek-chat'}
+        >
+          ⚡ DeepSeek
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

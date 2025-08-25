@@ -100,11 +100,11 @@ export function ChatSidebar({
         
         <Button
           onClick={onNewChat}
-          className="w-full justify-start gap-2 bg-blue-600 hover:bg-blue-700"
+          className="w-full justify-start gap-2 bg-blue-600 hover:bg-blue-700 text-white"
           size="sm"
         >
           <PlusIcon size={16} />
-          Start New Chat
+          New Chat
         </Button>
       </div>
 
@@ -115,8 +115,8 @@ export function ChatSidebar({
             <div className="mb-4">
               <MessageSquareIcon size={48} className="mx-auto text-gray-300" />
             </div>
-            <p className="text-sm">No conversations yet</p>
-            <p className="text-xs mt-1">Click "Start New Chat" to begin</p>
+            <p className="text-sm">No chats yet</p>
+            <p className="text-xs mt-1">Click "New Chat" to start</p>
           </div>
         )}
         <div className="p-2 space-y-1">

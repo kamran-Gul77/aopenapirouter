@@ -2,106 +2,142 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { BotIcon, ZapIcon } from 'lucide-react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { BotIcon, ZapIcon, XIcon } from 'lucide-react';
 
 interface ModelSelectionModalProps {
   open: boolean;
+  onClose: () => void;
   onSelectModel: (model: 'openai/gpt-4o' | 'deepseek-chat') => void;
 }
 
-export function ModelSelectionModal({ open, onSelectModel }: ModelSelectionModalProps) {
-  const [selectedModel, setSelectedModel] = useState<'openai/gpt-4o' | 'deepseek-chat' | null>(null);
+export function ModelSelectionModal({ open, onClose, onSelectModel }: ModelSelectionModalProps) {
+  const [hoveredModel, setHoveredModel] = useState<string | null>(null);
 
   const models = [
     {
       id: 'openai/gpt-4o' as const,
       name: 'ChatGPT',
-      description: 'GPT-4o - Advanced reasoning and creative tasks',
+      subtitle: 'By OpenAI',
+      description: 'Great for most tasks',
       icon: BotIcon,
-      features: ['Advanced reasoning', 'Creative writing', 'Code generation', 'Image analysis'],
-      color: 'bg-green-600',
+      color: 'from-green-400 to-green-600',
+      bgColor: 'bg-green-50',
+      borderColor: 'border-green-200',
+      hoverBorder: 'hover:border-green-400',
     },
     {
       id: 'deepseek-chat' as const,
       name: 'DeepSeek',
-      description: 'DeepSeek Chat - Fast and efficient AI assistant',
+      subtitle: 'By DeepSeek',
+      description: 'Fast and efficient',
       icon: ZapIcon,
-      features: ['Fast responses', 'Efficient processing', 'Code assistance', 'General chat'],
-      color: 'bg-blue-600',
+      color: 'from-blue-400 to-blue-600',
+      bgColor: 'bg-blue-50',
+      borderColor: 'border-blue-200',
+      hoverBorder: 'hover:border-blue-400',
     },
   ];
 
   const handleSelectModel = (model: 'openai/gpt-4o' | 'deepseek-chat') => {
-    setSelectedModel(model);
     onSelectModel(model);
+    onClose();
   };
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="max-w-4xl" onPointerDownOutside={(e) => e.preventDefault()}>
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center">Choose Your AI Assistant</DialogTitle>
-          <DialogDescription className="text-center text-lg">
-            Select the AI model you'd like to chat with. You can change this later for each conversation.
-          </DialogDescription>
-        </DialogHeader>
-        
-        <div className="grid md:grid-cols-2 gap-6 mt-6">
+      <DialogContent 
+        className="max-w-md p-0 gap-0 bg-white rounded-2xl border-0 shadow-2xl"
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+      >
+        {/* Header */}
+        <div className="relative p-6 pb-4">
+          <button
+            onClick={onClose}
+            className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <XIcon size={20} className="text-gray-500" />
+          </button>
+          <h2 className="text-xl font-semibold text-gray-900 mb-1">
+            Choose a bot
+          </h2>
+          <p className="text-sm text-gray-600">
+            Select an AI assistant to start chatting
+          </p>
+        </div>
+
+        {/* Models List */}
+        <div className="px-6 pb-6 space-y-3">
           {models.map((model) => {
             const Icon = model.icon;
-            const isSelected = selectedModel === model.id;
+            const isHovered = hoveredModel === model.id;
             
             return (
-              <Card 
+              <div
                 key={model.id}
-                className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-2 ${
-                  isSelected 
-                    ? 'border-blue-500 shadow-lg scale-105' 
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
+                className={`
+                  relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
+                  ${model.bgColor} ${model.borderColor} ${model.hoverBorder}
+                  ${isHovered ? 'scale-[1.02] shadow-lg' : 'hover:shadow-md'}
+                `}
                 onClick={() => handleSelectModel(model.id)}
+                onMouseEnter={() => setHoveredModel(model.id)}
+                onMouseLeave={() => setHoveredModel(null)}
               >
-                <CardHeader className="text-center pb-4">
-                  <div className={`w-16 h-16 ${model.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                    <Icon size={32} className="text-white" />
-                  </div>
-                  <CardTitle className="text-xl">{model.name}</CardTitle>
-                  <CardDescription className="text-sm">{model.description}</CardDescription>
-                </CardHeader>
-                
-                <CardContent>
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-sm text-gray-700 mb-3">Key Features:</h4>
-                    <ul className="space-y-2">
-                      {model.features.map((feature, index) => (
-                        <li key={index} className="flex items-center text-sm text-gray-600">
-                          <div className="w-2 h-2 bg-gray-400 rounded-full mr-3 flex-shrink-0" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
+                <div className="flex items-center gap-4">
+                  {/* Icon */}
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${model.color} flex items-center justify-center flex-shrink-0`}>
+                    <Icon size={24} className="text-white" />
                   </div>
                   
-                  <Button 
-                    className={`w-full mt-6 ${
-                      isSelected 
-                        ? 'bg-blue-600 hover:bg-blue-700' 
-                        : 'bg-gray-600 hover:bg-gray-700'
-                    }`}
-                    onClick={() => handleSelectModel(model.id)}
-                  >
-                    {isSelected ? 'Selected' : 'Select'} {model.name}
-                  </Button>
-                </CardContent>
-              </Card>
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-semibold text-gray-900 text-base">
+                        {model.name}
+                      </h3>
+                      <span className="text-xs text-gray-500 font-medium">
+                        {model.subtitle}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      {model.description}
+                    </p>
+                  </div>
+
+                  {/* Arrow indicator */}
+                  <div className={`
+                    w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200
+                    ${isHovered ? 'bg-white shadow-sm' : 'bg-transparent'}
+                  `}>
+                    <svg 
+                      width="12" 
+                      height="12" 
+                      viewBox="0 0 12 12" 
+                      fill="none" 
+                      className={`transition-colors duration-200 ${isHovered ? 'text-gray-700' : 'text-gray-400'}`}
+                    >
+                      <path 
+                        d="M4.5 3L7.5 6L4.5 9" 
+                        stroke="currentColor" 
+                        strokeWidth="1.5" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             );
           })}
         </div>
-        
-        <div className="mt-6 text-center text-sm text-gray-500">
-          <p>You can switch between models anytime using the dropdown in your chat interface.</p>
+
+        {/* Footer */}
+        <div className="px-6 pb-6">
+          <p className="text-xs text-gray-500 text-center">
+            You can switch models anytime during your conversation
+          </p>
         </div>
       </DialogContent>
     </Dialog>

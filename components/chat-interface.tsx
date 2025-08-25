@@ -13,9 +13,10 @@ import type { Chat, Message } from '@/lib/supabase';
 interface ChatInterfaceProps {
   activeChat: Chat | null;
   onUpdateChat: (chat: Chat) => void;
+  onNewChat: () => void;
 }
 
-export function ChatInterface({ activeChat, onUpdateChat }: ChatInterfaceProps) {
+export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [streamingMessage, setStreamingMessage] = useState('');
@@ -100,20 +101,8 @@ export function ChatInterface({ activeChat, onUpdateChat }: ChatInterfaceProps) 
   const updateChatModel = async (model: 'openai/gpt-4o' | 'deepseek-chat') => {
     if (!activeChat) return;
 
-    try {
-      const response = await fetch(`/api/chats/${activeChat.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model }),
-      });
-
-      if (response.ok) {
-        const updatedChat = await response.json();
-        onUpdateChat(updatedChat);
-      }
-    } catch (error) {
-      console.error('Error updating chat model:', error);
-    }
+    // Instead of updating current chat, create a new chat with the selected model
+    onNewChat();
   };
 
   if (!activeChat) {
@@ -124,14 +113,18 @@ export function ChatInterface({ activeChat, onUpdateChat }: ChatInterfaceProps) 
             <BotIcon size={32} className="text-white" />
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-3">
-            Ready to Chat!
+            Welcome to AI Chat
           </h2>
           <p className="text-gray-600 mb-6 max-w-md mx-auto">
-            Your AI assistant is ready to help. Select an existing conversation from the sidebar or start a new chat.
+            Choose an AI model and start chatting. You can switch between ChatGPT and DeepSeek anytime.
           </p>
-          <div className="text-sm text-gray-500">
-            <p>💡 Tip: You can switch between ChatGPT and DeepSeek models anytime</p>
-          </div>
+          <Button 
+            onClick={onNewChat}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+          >
+            <PlusIcon size={16} className="mr-2" />
+            Start New Chat
+          </Button>
         </div>
       </div>
     );
@@ -145,6 +138,9 @@ export function ChatInterface({ activeChat, onUpdateChat }: ChatInterfaceProps) 
           <h2 className="text-lg font-semibold text-gray-900">
             {activeChat.title || 'Untitled Chat'}
           </h2>
+          <p className="text-sm text-gray-500">
+            {activeChat.model === 'openai/gpt-4o' ? '🤖 ChatGPT' : '⚡ DeepSeek'}
+          </p>
         </div>
         <ModelSelector
           value={activeChat.model}
