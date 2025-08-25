@@ -104,12 +104,21 @@ export function ChatSidebar({
           size="sm"
         >
           <PlusIcon size={16} />
-          New Chat
+          Start New Chat
         </Button>
       </div>
 
       {/* Chat List */}
       <ScrollArea className="flex-1">
+        {chats.length === 0 && (
+          <div className="p-4 text-center text-gray-500">
+            <div className="mb-4">
+              <MessageSquareIcon size={48} className="mx-auto text-gray-300" />
+            </div>
+            <p className="text-sm">No conversations yet</p>
+            <p className="text-xs mt-1">Click "Start New Chat" to begin</p>
+          </div>
+        )}
         <div className="p-2 space-y-1">
           {chats.map((chat) => (
             <div
@@ -161,7 +170,7 @@ export function ChatSidebar({
                         {chat.title || 'Untitled Chat'}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        {chat.model === 'openai/gpt-4o' ? 'ChatGPT' : 'DeepSeek'}
+                        {chat.model === 'openai/gpt-4o' ? '🤖 ChatGPT' : '⚡ DeepSeek'}
                       </p>
                       <p className="text-xs text-gray-400 mt-1">
                         {new Date(chat.created_at).toLocaleDateString()}

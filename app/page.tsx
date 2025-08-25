@@ -5,6 +5,7 @@ import { createSupabaseClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { ChatSidebar } from '@/components/chat-sidebar';
 import { ChatInterface } from '@/components/chat-interface';
+import { ModelSelectionModal } from '@/components/model-selection-modal';
 import type { Chat } from '@/lib/supabase';
 
 export default function Home() {
@@ -12,6 +13,7 @@ export default function Home() {
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [showModelSelection, setShowModelSelection] = useState(false);
   const supabase = createSupabaseClient();
   const router = useRouter();
 
@@ -23,7 +25,7 @@ export default function Home() {
         return;
       }
       setUser(session.user);
-      loadChats();
+      await loadChats();
     };
     
     checkUser();
@@ -49,6 +51,11 @@ export default function Home() {
       if (response.ok) {
         const data = await response.json();
         setChats(data);
+        
+        // If no chats exist, show model selection modal
+        if (data.length === 0) {
+          setShowModelSelection(true);
+        }
       }
     } catch (error) {
       console.error('Error loading chats:', error);
@@ -57,12 +64,12 @@ export default function Home() {
     }
   };
 
-  const createNewChat = async () => {
+  const createNewChat = async (model?: 'openai/gpt-4o' | 'deepseek-chat') => {
     try {
       const response = await fetch('/api/chats', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'openai/gpt-4o' }),
+        body: JSON.stringify({ model: model || 'openai/gpt-4o' }),
       });
 
       if (response.ok) {
@@ -75,6 +82,10 @@ export default function Home() {
     }
   };
 
+  const handleModelSelection = async (model: 'openai/gpt-4o' | 'deepseek-chat') => {
+    setShowModelSelection(false);
+    await createNewChat(model);
+  };
   const renameChat = async (id: string, title: string) => {
     try {
       const response = await fetch(`/api/chats/${id}`, {
@@ -131,6 +142,10 @@ export default function Home() {
 
   return (
     <div className="h-screen flex bg-gray-50">
+      <ModelSelectionModal
+        open={showModelSelection}
+        onSelectModel={handleModelSelection}
+      />
       <ChatSidebar
         chats={chats}
         activeChat={activeChat}

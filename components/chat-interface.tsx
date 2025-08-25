@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChatInput } from './chat-input';
 import { MessageList } from './message-list';
 import { ModelSelector } from './model-selector';
+import { BotIcon } from 'lucide-react';
 import type { Chat, Message } from '@/lib/supabase';
 
 interface ChatInterfaceProps {
@@ -119,12 +120,18 @@ export function ChatInterface({ activeChat, onUpdateChat }: ChatInterfaceProps) 
     return (
       <div className="flex-1 flex items-center justify-center bg-white">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-600 mb-2">
-            Welcome to AI Chat
+          <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <BotIcon size={32} className="text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            Ready to Chat!
           </h2>
-          <p className="text-gray-500">
-            Select a chat or create a new one to get started
+          <p className="text-gray-600 mb-6 max-w-md mx-auto">
+            Your AI assistant is ready to help. Select an existing conversation from the sidebar or start a new chat.
           </p>
+          <div className="text-sm text-gray-500">
+            <p>💡 Tip: You can switch between ChatGPT and DeepSeek models anytime</p>
+          </div>
         </div>
       </div>
     );
