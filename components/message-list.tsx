@@ -1,0 +1,98 @@
+"use client";
+
+import { cn } from '@/lib/utils';
+import type { Message } from '@/lib/supabase';
+import { UserIcon, BotIcon } from 'lucide-react';
+
+interface MessageListProps {
+  messages: Message[];
+  streamingMessage?: string;
+  isLoading?: boolean;
+}
+
+export function MessageList({ messages, streamingMessage, isLoading }: MessageListProps) {
+  return (
+    <div className="space-y-6">
+      {messages.map((message) => (
+        <MessageBubble key={message.id} message={message} />
+      ))}
+      
+      {streamingMessage && (
+        <div className="flex gap-3">
+          <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+            <BotIcon size={16} className="text-white" />
+          </div>
+          <div className="flex-1 bg-gray-50 rounded-lg p-4">
+            <div className="prose prose-sm max-w-none">
+              {streamingMessage}
+              <span className="inline-block w-2 h-4 bg-blue-600 ml-1 animate-pulse" />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MessageBubble({ message }: { message: Message }) {
+  const isUser = message.role === 'user';
+  
+  return (
+    <div className={cn(
+      "flex gap-3",
+      isUser ? "justify-end" : "justify-start"
+    )}>
+      {!isUser && (
+        <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+          <BotIcon size={16} className="text-white" />
+        </div>
+      )}
+      
+      <div className={cn(
+        "max-w-[70%] rounded-lg p-4",
+        isUser 
+          ? "bg-blue-600 text-white" 
+          : "bg-gray-50 text-gray-900"
+      )}>
+        <div className="prose prose-sm max-w-none">
+          {typeof message.content === 'string' 
+            ? message.content 
+            : message.content.text
+          }
+          
+          {/* Render files if present */}
+          {typeof message.content === 'object' && message.content.files && (
+            <div className="mt-3 space-y-2">
+              {message.content.files.map((file, index) => (
+                <div key={index} className="border rounded p-2 bg-white/50">
+                  {file.type.startsWith('image/') ? (
+                    <img 
+                      src={file.url} 
+                      alt={file.name}
+                      className="max-w-full h-auto rounded"
+                    />
+                  ) : (
+                    <a 
+                      href={file.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      📎 {file.name}
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {isUser && (
+        <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center flex-shrink-0">
+          <UserIcon size={16} className="text-white" />
+        </div>
+      )}
+    </div>
+  );
+}
