@@ -4,6 +4,10 @@ import { cookies } from "next/headers";
 import { streamChatCompletion, parseStreamResponse } from "@/lib/openrouter";
 
 export const dynamic = "force-dynamic";
+type MessageContentPart =
+  | { type: "text"; text: string }
+  | { type: "image_url"; image_url: { url: string } }
+  | { type: "file"; file: { filename: string; file_data: string } };
 
 export async function POST(request: NextRequest) {
   try {
@@ -131,29 +135,26 @@ export async function POST(request: NextRequest) {
   }
 }
 
-type MessagePart =
-  | { type: "text"; text: string }
-  | { type: "image_url"; url: string }
-  | { type: "file"; file: { filename: string; file_data: string } };
+function formatMessageContent(content: any): MessageContentPart[] {
+  const parts: MessageContentPart[] = [];
 
-function formatMessageContent(
-  content: any
-): MessagePart | MessagePart[] | string {
   if (typeof content === "string") {
-    return content;
+    parts.push({ type: "text", text: content });
+    return parts;
   }
 
-  if (content.text && content.files) {
-    const parts: MessagePart[] = [{ type: "text", text: content.text }];
+  if (content.text) {
+    parts.push({ type: "text", text: content.text });
+  }
 
+  if (content.files && Array.isArray(content.files)) {
     content.files.forEach((file: any) => {
       if (file.type.startsWith("image/")) {
         parts.push({
           type: "image_url",
-          url: file.url,
+          image_url: { url: file.url },
         });
       } else {
-        // For PDFs and other files, use file format
         parts.push({
           type: "file",
           file: {
@@ -163,9 +164,7 @@ function formatMessageContent(
         });
       }
     });
-
-    return parts;
   }
 
-  return content.text || "";
+  return parts;
 }
