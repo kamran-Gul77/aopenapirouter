@@ -8,15 +8,38 @@ interface MessageListProps {
   messages: Message[];
   streamingMessage?: string;
   isLoading?: boolean;
+  isThinking?: boolean;
 }
 
-export function MessageList({ messages, streamingMessage, isLoading }: MessageListProps) {
+export function MessageList({ messages, streamingMessage, isLoading, isThinking }: MessageListProps) {
   return (
     <div className="space-y-6">
       {messages.map((message) => (
         <MessageBubble key={message.id} message={message} />
       ))}
       
+      {/* Thinking state */}
+      {isThinking && !streamingMessage && (
+        <div className="flex gap-3">
+          <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+            <BotIcon size={16} className="text-white" />
+          </div>
+          <div className="flex-1 bg-gray-50 rounded-lg p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1">
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+              </div>
+              <span className="text-sm text-gray-600 font-medium">
+                AI is thinking...
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Streaming response */}
       {streamingMessage && (
         <div className="flex gap-3">
           <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">

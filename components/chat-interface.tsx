@@ -19,6 +19,7 @@ interface ChatInterfaceProps {
 export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
   const [streamingMessage, setStreamingMessage] = useState('');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const supabase = createSupabaseClient();
@@ -36,7 +37,7 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
     }
-  }, [messages, streamingMessage]);
+  }, [messages, streamingMessage, isThinking]);
 
   const loadMessages = async () => {
     if (!activeChat) return;
@@ -57,6 +58,7 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
   const sendMessage = async (content: any) => {
     if (!activeChat) return;
 
+    setIsThinking(true);
     setIsLoading(true);
     setStreamingMessage('');
 
@@ -74,6 +76,7 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
 
       if (!response.body) throw new Error('No response body');
 
+      setIsThinking(false); // Stop thinking when we start receiving response
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let accumulatedText = '';
@@ -93,6 +96,7 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
       setStreamingMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
+      setIsThinking(false);
     } finally {
       setIsLoading(false);
     }
@@ -162,6 +166,7 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
           messages={messages}
           streamingMessage={streamingMessage}
           isLoading={isLoading}
+          isThinking={isThinking}
         />
       </ScrollArea>
 
@@ -169,7 +174,7 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
       <div className="border-t border-gray-200 p-4">
         <ChatInput
           onSendMessage={sendMessage}
-          disabled={isLoading}
+          disabled={isLoading || isThinking}
         />
       </div>
     </div>
