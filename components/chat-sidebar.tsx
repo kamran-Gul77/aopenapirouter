@@ -116,7 +116,7 @@ export function ChatSidebar({
               <MessageSquareIcon size={48} className="mx-auto text-gray-300" />
             </div>
             <p className="text-sm">No chats yet</p>
-            <p className="text-xs mt-1">Click "New Chat" to start</p>
+            <p className="text-xs mt-1">Click New Chat to start</p>
           </div>
         )}
         <div className="p-2 space-y-1">
