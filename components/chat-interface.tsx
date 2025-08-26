@@ -120,47 +120,7 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
           </p>
           
           {/* Model Selection Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {/* ChatGPT Card */}
-            <div 
-              className="group p-6 bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-xl cursor-pointer transition-all duration-200 hover:border-green-400 hover:shadow-lg hover:scale-[1.02]"
-              onClick={() => updateChatModel('openai/gpt-4o')}
-            >
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center mb-4">
-                  <BotIcon size={24} className="text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">ChatGPT</h3>
-                <p className="text-sm text-gray-600 mb-4">By OpenAI</p>
-                <p className="text-xs text-gray-500 mb-4">Great for most tasks, creative writing, and complex reasoning</p>
-                <div className="w-full">
-                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white group-hover:bg-green-700">
-                    Start with ChatGPT
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* DeepSeek Card */}
-            <div 
-              className="group p-6 bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-xl cursor-pointer transition-all duration-200 hover:border-blue-400 hover:shadow-lg hover:scale-[1.02]"
-              onClick={() => updateChatModel('deepseek/deepseek-chat')}
-            >
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center mb-4">
-                  <ZapIcon size={24} className="text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">DeepSeek</h3>
-                <p className="text-sm text-gray-600 mb-4">By DeepSeek</p>
-                <p className="text-xs text-gray-500 mb-4">Fast and efficient, excellent for coding and technical tasks</p>
-                <div className="w-full">
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white group-hover:bg-blue-700">
-                    Start with DeepSeek
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
+     
 
           {/* Alternative button */}
           <div className="text-center">
@@ -170,7 +130,7 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
               className="text-gray-600 hover:text-gray-800"
             >
               <PlusIcon size={16} className="mr-2" />
-              Or choose from modal
+               choose from modal
             </Button>
           </div>
         </div>

@@ -150,6 +150,7 @@ export default function Home() {
         open={showModelSelection}
         onClose={handleCloseModal}
         onSelectModel={handleModelSelection}
+        
       />
       <ChatSidebar
         chats={chats}

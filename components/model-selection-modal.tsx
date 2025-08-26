@@ -45,20 +45,19 @@ export function ModelSelectionModal({ open, onClose, onSelectModel }: ModelSelec
   };
 
   return (
-    <Dialog open={open} onOpenChange={() => {}}>
+    <Dialog open={open}  onOpenChange={(open) => {
+  if (!open) onClose();
+}} >
       <DialogContent 
+      
         className="max-w-md p-0 gap-0 bg-white rounded-2xl border-0 shadow-2xl"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
+        
+        
       >
         {/* Header */}
         <div className="relative p-6 pb-4">
-          <button
-            onClick={onClose}
-            className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-100 transition-colors"
-          >
-            <XIcon size={20} className="text-gray-500" />
-          </button>
           <h2 className="text-xl font-semibold text-gray-900 mb-1">
             Choose a bot
           </h2>
