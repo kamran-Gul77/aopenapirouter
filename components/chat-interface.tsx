@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChatInput } from './chat-input';
 import { MessageList } from './message-list';
 import { ModelSelector } from './model-selector';
-import { BotIcon } from 'lucide-react';
+import { BotIcon, PlusIcon } from 'lucide-react';
 import type { Chat, Message } from '@/lib/supabase';
 
 interface ChatInterfaceProps {
@@ -98,7 +98,7 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
     }
   };
 
-  const updateChatModel = async (model: 'openai/gpt-4o' | 'deepseek-chat') => {
+  const updateChatModel = async (model: 'openai/gpt-4o' | 'deepseek/deepseek-chat') => {
     if (!activeChat) return;
 
     // Instead of updating current chat, create a new chat with the selected model

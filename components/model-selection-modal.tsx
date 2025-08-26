@@ -8,7 +8,7 @@ import { BotIcon, ZapIcon, XIcon } from 'lucide-react';
 interface ModelSelectionModalProps {
   open: boolean;
   onClose: () => void;
-  onSelectModel: (model: 'openai/gpt-4o' | 'deepseek-chat') => void;
+  onSelectModel: (model: 'openai/gpt-4o' | 'deepseek/deepseek-chat') => void;
 }
 
 export function ModelSelectionModal({ open, onClose, onSelectModel }: ModelSelectionModalProps) {
@@ -27,7 +27,7 @@ export function ModelSelectionModal({ open, onClose, onSelectModel }: ModelSelec
       hoverBorder: 'hover:border-green-400',
     },
     {
-      id: 'deepseek-chat' as const,
+      id: 'deepseek/deepseek-chat' as const,
       name: 'DeepSeek',
       subtitle: 'By DeepSeek',
       description: 'Fast and efficient',
@@ -39,7 +39,7 @@ export function ModelSelectionModal({ open, onClose, onSelectModel }: ModelSelec
     },
   ];
 
-  const handleSelectModel = (model: 'openai/gpt-4o' | 'deepseek-chat') => {
+  const handleSelectModel = (model: 'openai/gpt-4o' | 'deepseek/deepseek-chat') => {
     onSelectModel(model);
     onClose();
   };

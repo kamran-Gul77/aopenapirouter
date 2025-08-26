@@ -19,15 +19,15 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { model } = await request.json();
+    const { title } = await request.json();
 
-    if (!model) {
+    if (!title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }
 
     const { data: chat, error } = await supabase
       .from("chats")
-      .update({ model })
+      .update({ title })
       .eq("id", params.id)
       .eq("user_id", session.user.id)
       .select()

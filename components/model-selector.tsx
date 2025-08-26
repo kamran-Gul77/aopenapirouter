@@ -10,13 +10,13 @@ import {
 import { ChevronDownIcon } from 'lucide-react';
 
 interface ModelSelectorProps {
-  value: 'openai/gpt-4o' | 'deepseek-chat';
-  onChange: (model: 'openai/gpt-4o' | 'deepseek-chat') => void;
+  value: 'openai/gpt-4o' | 'deepseek/deepseek-chat';
+  onChange: (model: 'openai/gpt-4o' | 'deepseek/deepseek-chat') => void;
 }
 
 const modelLabels = {
   'openai/gpt-4o': 'Switch to ChatGPT',
-  'deepseek-chat': 'Switch to DeepSeek',
+  'deepseek/deepseek-chat': 'Switch to DeepSeek',
 };
 
 export function ModelSelector({ value, onChange }: ModelSelectorProps) {
@@ -38,8 +38,8 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
           🤖 ChatGPT
         </DropdownMenuItem>
         <DropdownMenuItem 
-          onClick={() => onChange('deepseek-chat')}
-          disabled={value === 'deepseek-chat'}
+          onClick={() => onChange('deepseek/deepseek-chat')}
+          disabled={value === 'deepseek/deepseek-chat'}
         >
           ⚡ DeepSeek
         </DropdownMenuItem>

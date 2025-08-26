@@ -6,7 +6,7 @@
 CREATE TABLE IF NOT EXISTS chats (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
-  model text NOT NULL CHECK (model IN ('openai/gpt-4o', 'deepseek-chat')),
+  model text NOT NULL CHECK (model IN ('openai/gpt-4o', 'deepseek/deepseek-chat')),
   title text,
   created_at timestamptz DEFAULT now()
 );

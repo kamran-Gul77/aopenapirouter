@@ -61,7 +61,7 @@ export default function Home() {
     }
   };
 
-  const createNewChat = async (model: 'openai/gpt-4o' | 'deepseek-chat') => {
+  const createNewChat = async (model: 'openai/gpt-4o' | 'deepseek/deepseek-chat') => {
     try {
       const response = await fetch('/api/chats', {
         method: 'POST',
@@ -83,13 +83,13 @@ export default function Home() {
     setShowModelSelection(true);
   };
 
-  const handleModelSelection = async (model: 'openai/gpt-4o' | 'deepseek-chat') => {
+  const handleModelSelection = async (model: 'openai/gpt-4o' | 'deepseek/deepseek-chat') => {
     await createNewChat(model);
   };
-  const renameChat = async (id: string, title: string) => {
   const handleCloseModal = () => {
     setShowModelSelection(false);
   };
+  const renameChat = async (id: string, title: string) => {
 
     try {
       const response = await fetch(`/api/chats/${id}`, {
