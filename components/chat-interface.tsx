@@ -105,8 +105,13 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
   const updateChatModel = async (model: 'openai/gpt-4o' | 'deepseek/deepseek-chat') => {
     if (!activeChat) return;
 
-    // Instead of updating current chat, create a new chat with the selected model
-    onNewChat();
+    // Check if the chat is not empty before creating a new one
+    if (messages.length > 0) {
+      onNewChat();
+    } else {
+      // If the chat is empty, update the model of the current chat
+      onUpdateChat({ ...activeChat, model });
+    }
   };
 
   if (!activeChat) {
@@ -123,9 +128,6 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
             Choose an AI model and start chatting. You can switch between ChatGPT and DeepSeek anytime.
           </p>
           
-          {/* Model Selection Cards */}
-     
-
           {/* Alternative button */}
           <div className="text-center">
             <Button 
@@ -134,7 +136,7 @@ export function ChatInterface({ activeChat, onUpdateChat, onNewChat }: ChatInter
               className="text-gray-600 hover:text-gray-800"
             >
               <PlusIcon size={16} className="mr-2" />
-               choose from modal
+                choose from modal
             </Button>
           </div>
         </div>

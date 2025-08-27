@@ -97,15 +97,16 @@ export function ChatSidebar({
             <LogOutIcon size={16} />
           </Button>
         </div>
-        
-        <Button
+        <div>Chat History</div>
+        {/* <Button
+
           onClick={onNewChat}
           className="w-full justify-start gap-2 bg-blue-600 hover:bg-blue-700 text-white"
           size="sm"
         >
           <PlusIcon size={16} />
           New Chat
-        </Button>
+        </Button> */}
       </div>
 
       {/* Chat List */}
